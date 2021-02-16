@@ -20,22 +20,16 @@ from sklearn import preprocessing
 import math
 import utils
 import argparse, pickle
-from sklearn.cluster import KMeans
-from sklearn.cluster import SpectralClustering
 from collections import Counter
 from sklearn.metrics import f1_score
 from ogb.nodeproppred import Evaluator
 
-#from spherecluster import SphericalKMeans
-#from subspace_clustering.cluster.selfrepresentation import ElasticNetSubspaceClustering
 from scipy.optimize import linear_sum_assignment
 
-from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 import matplotlib
 import sys
 from dgl.nn import GraphConv
-from dgl.data import PPIDataset
 from copy import deepcopy
 
 def ece_score(py, y_test, n_bins=20):
@@ -553,16 +547,20 @@ def run(args, new_classes):
             loss, assignment = model_q(features, sp_adj)
             q_probs = assignment[:, unmatched ].sum(dim=1)
         #optimizer_p = torch.optim.Adam(model_p.parameters(), lr=0.05, weight_decay=args.weight_decay)
-        train_classifier(model_p, optimizer_p, 30, q_probs, in_domain_idx)
-        #train_classifier(model_p, optimizer_p, 30, q_probs)
+        if args.dataset == 'dblp':
+            train_classifier(model_p, optimizer_p, 30, q_probs, in_domain_idx)
+        else:
+            train_classifier(model_p, optimizer_p, 30, q_probs)
 
         with torch.no_grad():
             model_p.eval()
             p_probs = F.softmax(model_p(features)[:, :nb_classes], dim=1)
         
         # comment to disable calibration
-        train_cluster(model_q, optimizer_q, 500, [p_probs, M, in_domain_idx])
-        #train_cluster(model_q, optimizer_q, 500, [p_probs, M, np.arange(g.number_of_nodes())])
+        if args.dataset == 'dblp':
+            train_cluster(model_q, optimizer_q, 500, [p_probs, M, in_domain_idx])
+        else:
+            train_cluster(model_q, optimizer_q, 500, [p_probs, M, np.arange(g.number_of_nodes())])
 
         with torch.no_grad():
             model_p.eval()
