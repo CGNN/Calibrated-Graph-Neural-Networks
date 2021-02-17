@@ -29,3 +29,5 @@ python semi_gcn_doc.py --dataset=cora --num-unseen=3 --n-epochs=200 --n-hidden=1
 ```
 
 All other baselines are available as semi_gcn_ths.py, semi_dgi_ths.py, semi_dgi_doc.py. Specifically, we run Feat.-X by setting --gnn-arch=mlp.
+
+## Supplementary Case Studies
