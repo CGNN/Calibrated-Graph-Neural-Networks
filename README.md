@@ -31,3 +31,5 @@ python semi_gcn_doc.py --dataset=cora --num-unseen=3 --n-epochs=200 --n-hidden=1
 All other baselines are available as semi_gcn_ths.py, semi_dgi_ths.py, semi_dgi_doc.py. Specifically, we run Feat.-X by setting --gnn-arch=mlp.
 
 ## Supplementary Case Studies
+Here, we provide a more comprehesive version (Tab.5 in the main paper) of new class discovered by CGNN and baseline. It clearly shows CGNN provide more consistent node(paper) within the same discovered classes.
+<p align="left"><img width="90%" src="figures/class_discovery.png"/></p>
